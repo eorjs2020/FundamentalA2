@@ -6,12 +6,15 @@
 #include "TextureManager.h"
 #include "Engine.h"
 #include "Button.h"
+#include "tinyxml2.h"
 #include <iostream>
-#include <fstream>
+
+using namespace tinyxml2;
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
 void State::Render()
 {
+	
 	SDL_RenderPresent(Engine::Instance().GetRenderer());
 }
 void State::Resume() {}
@@ -22,21 +25,22 @@ GameState::GameState() {}
 
 void GameState::Enter()
 {
+	
 	std::cout << "Entering GameState..." << std::endl;
-	m_pPlayer = new PlatformPlayer({ 0,0,0,0 }, { 512.0f,256.0f,32.0f,64.0f },
-		Engine::Instance().GetRenderer(), nullptr);
+	m_pPlayer = new PlatformPlayer({ 0,0,128,128 }, { 60.0f,200.0f,64.0f,64.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("player"), 0, 0, 7, 7);
 	m_pTileText = IMG_LoadTexture(Engine::Instance().GetRenderer(), "Img/Tiles.png");
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
-	std::ifstream inFile("Dat/Tiledata.txt");
-
+	m_timer = new Label("Font", 850, 10, m_defualtTimer, { 255,255,255,255 });
+	timer.start();
 }
 
 void GameState::Update()
 {
 	// Player input.
-	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	if (EVMA::KeyHeld(SDL_SCANCODE_A) && m_pPlayer->GetDstP()->x <= 30)
 		m_pPlayer->SetAccelX(-1.0);
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D) && m_pPlayer->GetDstP()->x >= WIDTH - 400)
 		m_pPlayer->SetAccelX(1.0);
 	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
 	{
@@ -45,10 +49,11 @@ void GameState::Update()
 		m_pPlayer->SetGrounded(false);
 	}
 	//// Wrap the player on screen.
-	//if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
-	//else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
+	if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
+	else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
 	// Do the rest. 
-	
+	m_updateTimer = m_defualtTimer + timer.getrunnningtime(timer);
+	m_timer->SetText(m_updateTimer);
 	m_pPlayer->Update(); // Change to player Update here.
 	CheckCollision();
 }
@@ -103,7 +108,7 @@ void GameState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	// Draw the platforms.
-	
+	m_timer->Render();
 	// Draw the player.
 	m_pPlayer->Render();
 	// If GameState != current state.
@@ -114,17 +119,31 @@ void GameState::Render()
 void GameState::Exit()
 {
 	delete m_pPlayer;
-	for (int row = 0; row < ROWS; row++)
+	XMLDocument xmlDoc;
+	xmlDoc.LoadFile("Score.xml");
+	XMLElement* pRoot = xmlDoc.FirstChildElement();
+	XMLElement* pElement = pRoot->FirstChildElement();
+	int m, s;
+	pElement->QueryIntAttribute("Minute", &m);
+	pElement->QueryIntAttribute("Second", &s);
+	if (m <= timer.m_minutes)
 	{
-		for (int col = 0; col < COLS; col++)
+		if (m = timer.m_minutes)
 		{
-			delete m_level[row][col];
-			m_level[row][col] = nullptr; // Wrangle your dangle.
+			if (s < timer.m_seconds)
+			{
+				pElement->SetAttribute("Minute", timer.m_minutes);
+				pElement->SetAttribute("Second", timer.m_seconds);
+			}
+
+		}
+		else
+		{
+			pElement->SetAttribute("Minute", timer.m_minutes);
+			pElement->SetAttribute("Second", timer.m_seconds);
 		}
 	}
-	for (auto const& i : m_tiles)
-		delete m_tiles[i.first];
-	m_tiles.clear();
+	xmlDoc.SaveFile("Score.xml");
 }
 
 void GameState::Resume() { }

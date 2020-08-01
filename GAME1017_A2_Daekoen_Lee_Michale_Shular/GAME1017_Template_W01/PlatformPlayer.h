@@ -1,15 +1,15 @@
 #pragma once
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
-#define GRAV 0.0
-#define JUMPFORCE 50.0
+#define GRAV 4.0
+#define JUMPFORCE 10.0
 
 #include "Sprite.h"
 
-class PlatformPlayer : public Sprite
+class PlatformPlayer : public AnimatedSprite
 {
 public:
-	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t);
+	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf);
 	void Update();
 	void Render();
 	void Stop();
@@ -23,7 +23,11 @@ public:
 	double GetVelY();
 	void SetX(float y);
 	void SetY(float y);
+	void SetState(int s);
 private:
+	enum state { running, rolling } m_state;
+	bool m_dir;
+	
 	bool m_grounded;
 	double m_accelX,
 		m_accelY,
