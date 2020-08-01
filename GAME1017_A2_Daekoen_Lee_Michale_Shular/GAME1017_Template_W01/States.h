@@ -27,10 +27,14 @@ public:
 class GameState : public State
 {
 private:
-	SDL_Texture *m_pTileText;
-	std::map<char, Tile*> m_tiles;
-	std::array<std::array<Tile*, COLS>, ROWS> m_level; // Fixed-size STL array of Tile pointers.
-	std::vector<Tile*> m_platforms;
+	//SDL_Texture *m_pTileText;
+	//std::map<char, Tile*> m_tiles;
+	//std::array<std::array<Tile*, COLS>, ROWS> m_level; // Fixed-size STL array of Tile pointers.
+	//std::vector<Tile*> m_platforms;
+	;
+	Sprite* m_pBackgroundOne[2], *m_pBackgroundTwo[5];
+	Sprite* m_pPlatform[3];
+	int m_pSrollSpeed[3] = { 1, 2, 4 };
 	PlatformPlayer* m_pPlayer;
 	bool m_bgScrollX = false, m_bgScrollY = false;
 public:
