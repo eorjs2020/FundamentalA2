@@ -45,8 +45,7 @@ void GameState::Enter()
 		m_pPlatform[i] = new Sprite({ 1024, 511 , 512, 258 }, { float(0.0 + 512 * i), 510 ,512,258, },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
 	}
-	m_pPlayer = new PlatformPlayer({ 0,0,0,0 }, { 512.0f,256.0f,32.0f,64.0f },
-		Engine::Instance().GetRenderer(), nullptr);
+
 	obs = new Obstacle();
 }
 
@@ -99,33 +98,33 @@ void GameState::UpdateTiles(float scroll, bool x)
 
 void GameState::CheckCollision()
 {
-	//for (unsigned i = 0; i < m_platforms.size(); i++) // For each platform.
-	//{
-	//	if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_platforms[i]->GetDstP()))
-	//	{
-	//		if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= m_platforms[i]->GetDstP()->y)
-	//		{ // Colliding top side of platform.
-	//			m_pPlayer->SetGrounded(true);
-	//			m_pPlayer->StopY();
-	//			m_pPlayer->SetY(m_platforms[i]->GetDstP()->y - m_pPlayer->GetDstP()->h);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h)
-	//		{ // Colliding bottom side of platform.
-	//			m_pPlayer->StopY();
-	//			m_pPlayer->SetY(m_platforms[i]->GetDstP()->y + m_platforms[i]->GetDstP()->h);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - m_pPlayer->GetVelX() <= m_platforms[i]->GetDstP()->x)
-	//		{ // Collision from left.
-	//			m_pPlayer->StopX(); // Stop the player from moving horizontally.
-	//			m_pPlayer->SetX(m_platforms[i]->GetDstP()->x - m_pPlayer->GetDstP()->w);
-	//		}
-	//		else if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w)
-	//		{ // Colliding right side of platform.
-	//			m_pPlayer->StopX();
-	//			m_pPlayer->SetX(m_platforms[i]->GetDstP()->x + m_platforms[i]->GetDstP()->w);
-	//		}
-	//	}
-	//}
+	for (unsigned i = 0; i < 3; i++) // For each platform.
+	{
+		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pPlatform[i]->GetDstP()))
+		{
+			if (m_pPlayer->GetDstP()->y + m_pPlayer->GetDstP()->h - (float)m_pPlayer->GetVelY() <= m_pPlatform[i]->GetDstP()->y)
+			{ // Colliding top side of platform.
+				m_pPlayer->SetGrounded(true);
+				m_pPlayer->StopY();
+				m_pPlayer->SetY(m_pPlatform[i]->GetDstP()->y - m_pPlayer->GetDstP()->h);
+			}
+			else if (m_pPlayer->GetDstP()->y - (float)m_pPlayer->GetVelY() >= m_pPlatform[i]->GetDstP()->y + m_pPlatform[i]->GetDstP()->h)
+			{ // Colliding bottom side of platform.
+				m_pPlayer->StopY();
+				m_pPlayer->SetY(m_pPlatform[i]->GetDstP()->y + m_pPlatform[i]->GetDstP()->h);
+			}
+			else if (m_pPlayer->GetDstP()->x + m_pPlayer->GetDstP()->w - m_pPlayer->GetVelX() <= m_pPlatform[i]->GetDstP()->x)
+			{ // Collision from left.
+				m_pPlayer->StopX(); // Stop the player from moving horizontally.
+				m_pPlayer->SetX(m_pPlatform[i]->GetDstP()->x - m_pPlayer->GetDstP()->w);
+			}
+			else if (m_pPlayer->GetDstP()->x - (float)m_pPlayer->GetVelX() >= m_pPlatform[i]->GetDstP()->x + m_pPlatform[i]->GetDstP()->w)
+			{ // Colliding right side of platform.
+				m_pPlayer->StopX();
+				m_pPlayer->SetX(m_pPlatform[i]->GetDstP()->x + m_pPlatform[i]->GetDstP()->w);
+			}
+		}
+	}
 }
 
 void GameState::Render()
@@ -133,9 +132,7 @@ void GameState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	// Draw the platforms.
-	m_timer->Render();
-	// Draw the player.
-	m_pPlayer->Render();
+	
 	for (int i = 0; i < 2; i++)
 		m_pBackgroundOne[i]->Render();
 	for (int i = 0; i < 5; i++)
@@ -143,6 +140,10 @@ void GameState::Render()
 	for (int i = 0; i < 3; i++) 
 		m_pPlatform[i]->Render();
 	obs->Render();
+	m_timer->Render();
+	// Draw the player.
+	m_pPlayer->Render();
+
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
 		State::Render();

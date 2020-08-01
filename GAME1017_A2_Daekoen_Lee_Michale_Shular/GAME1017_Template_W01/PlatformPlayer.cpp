@@ -94,7 +94,12 @@ void PlatformPlayer::SetState(int s)
 	
 	if (m_state == running)// Only other is running for now...
 	{
+	
 		m_src.y = 0;
+		m_src.h = 128;
+		m_dst.y -= 32;
+		m_dst.h = 64;
+
 		m_sprite = m_spriteMin = 0;
 		m_spriteMax = 7;
 	}
@@ -102,7 +107,9 @@ void PlatformPlayer::SetState(int s)
 	{
 		m_frame = 0;
 		m_src.x = 0;
-		m_src.y = 128;
+		m_src.y = 192;
+		m_src.h = 64;
+		m_dst.h = 32;
 		m_sprite = 0;
 		m_spriteMin = 0;
 		m_spriteMax = 3;
