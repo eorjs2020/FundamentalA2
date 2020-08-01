@@ -11,6 +11,8 @@
 #include "Button.h"
 #include "PlatformPlayer.h"
 #include "Tile.h"
+#include "Timer.h"
+#include "Label.h"
 
 class State // This is the abstract base class for all specific states.
 {
@@ -27,11 +29,14 @@ public:
 class GameState : public State
 {
 private:
+	Label* m_timer;
 	SDL_Texture *m_pTileText;
 	std::map<char, Tile*> m_tiles;
 	std::array<std::array<Tile*, COLS>, ROWS> m_level; // Fixed-size STL array of Tile pointers.
 	std::vector<Tile*> m_platforms;
+	std::string m_TimerNum, m_defualtTimer = "Timer: 0", m_updateTimer;
 	PlatformPlayer* m_pPlayer;
+	LTimer timer;
 	bool m_bgScrollX = false, m_bgScrollY = false;
 public:
 	GameState();

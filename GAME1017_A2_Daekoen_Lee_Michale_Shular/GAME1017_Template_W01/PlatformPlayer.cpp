@@ -2,9 +2,11 @@
 #include "Engine.h"
 #include <algorithm>
 #include <iostream>
+#include "EventManager.h"
+#include "TextureManager.h"
 
-PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer * r, SDL_Texture * t)
-	:Sprite(s, d, r, t)
+PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf)
+	:AnimatedSprite(s, d, r, t, sstart, smin, smax, nf), m_state(running), m_dir(0)
 {
 	m_grounded = false;
 	m_accelX = m_accelY = m_velX = m_velY = 0.0;
@@ -28,12 +30,44 @@ void PlatformPlayer::Update()
 	
 	m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	m_accelX = m_accelY = 0.0;
+	switch (m_state)
+	{
+	
+	case running:
+		
+		if (EVMA::KeyHeld(SDL_SCANCODE_S) )
+		{
+			SetState(rolling);
+			break; // Skip movement parsing below.
+		}
+		if (EVMA::KeyHeld(SDL_SCANCODE_A))
+		{
+			m_dir = 1;
+		}
+		else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+		{
+			m_dir = 0;
+
+		}
+		break;
+	
+	case rolling:
+
+		if (EVMA::KeyReleased(SDL_SCANCODE_S))
+		{
+			SetState(running);
+			break; // Skip movement parsing below.
+		}
+
+		break;
+	}
+	Animate();
 }
 
 void PlatformPlayer::Render()
 {
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 255, 255, 255);
-	SDL_RenderFillRectF(Engine::Instance().GetRenderer(), GetDstP());
+	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, static_cast<SDL_RendererFlip>(m_dir));
+
 }
 
 void PlatformPlayer::Stop() // If you want a dead stop both axes.
@@ -52,4 +86,28 @@ double PlatformPlayer::GetVelX() { return m_velX; }
 double PlatformPlayer::GetVelY() { return m_velY; }
 void PlatformPlayer::SetX(float y) { m_dst.x = y; }
 void PlatformPlayer::SetY(float y) { m_dst.y = y; }
+
+void PlatformPlayer::SetState(int s)
+{
+	m_state = static_cast<state>(s);
+	m_frame = 0;
+	
+	if (m_state == running)// Only other is running for now...
+	{
+		m_src.y = 0;
+		m_sprite = m_spriteMin = 0;
+		m_spriteMax = 7;
+	}
+	else if (m_state == rolling)
+	{
+		m_frame = 0;
+		m_src.x = 0;
+		m_src.y = 128;
+		m_sprite = 0;
+		m_spriteMin = 0;
+		m_spriteMax = 3;
+		
+	}
+	
+}
 
