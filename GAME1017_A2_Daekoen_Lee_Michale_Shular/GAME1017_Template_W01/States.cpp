@@ -28,36 +28,7 @@ void GameState::Enter()
 	m_pTileText = IMG_LoadTexture(Engine::Instance().GetRenderer(), "Img/Tiles.png");
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	std::ifstream inFile("Dat/Tiledata.txt");
-	if (inFile.is_open())
-	{ // Create map of Tile prototypes.
-		char key;
-		int x, y;
-		bool o, h;
-		while (!inFile.eof())
-		{
-			inFile >> key >> x >> y >> o >> h;
-			m_tiles.emplace(key, new Tile({ x * 32, y * 32, 32, 32 }, { 0,0,32,32 }, Engine::Instance().GetRenderer(), m_pTileText, o, h));
-		}
-	}
-	inFile.close();
-	inFile.open("Dat/Level1.txt");
-	if (inFile.is_open())
-	{ // Build the level from Tile prototypes.
-		char key;
-		for (int row = 0; row < ROWS; row++)
-		{
-			for (int col = 0; col < COLS; col++)
-			{
-				inFile >> key;
-				m_level[row][col] = m_tiles[key]->Clone(); // Prototype design pattern used.
-				m_level[row][col]->GetDstP()->x = (float)(32 * col);
-				m_level[row][col]->GetDstP()->y = (float)(32 * row);
-				if (m_level[row][col]->IsObstacle())
-					m_platforms.push_back(m_level[row][col]);
-			}
-		}
-	}
-	inFile.close();
+
 }
 
 void GameState::Update()
@@ -77,40 +48,8 @@ void GameState::Update()
 	//if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
 	//else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
 	// Do the rest. 
-	m_bgScrollX = m_bgScrollY = false;
-	if (m_pPlayer->GetVelX() > 0 && m_pPlayer->GetDstP()->x > WIDTH*0.7f)
-	{
-		if (m_level[0][COLS - 1]->GetDstP()->x > WIDTH - 32)
-		{
-			m_bgScrollX = true;
-			UpdateTiles((float)m_pPlayer->GetVelX(), true);
-		}
-	}
-	else if (m_pPlayer->GetVelX() < 0 && m_pPlayer->GetDstP()->x < WIDTH*0.3f)
-	{
-		if (m_level[0][0]->GetDstP()->x < 0)
-		{
-			m_bgScrollX = true;
-			UpdateTiles((float)m_pPlayer->GetVelX(), true);
-		}
-	}
-	if (m_pPlayer->GetVelY() > 0 && m_pPlayer->GetDstP()->y > HEIGHT*0.7f)
-	{
-		if (m_level[ROWS-1][0]->GetDstP()->y > HEIGHT - 32)
-		{
-			m_bgScrollY = true;
-			UpdateTiles((float)m_pPlayer->GetVelY());
-		}
-	}
-	else if (m_pPlayer->GetVelY() < 0 && m_pPlayer->GetDstP()->y < HEIGHT*0.3f)
-	{
-		if (m_level[0][0]->GetDstP()->y < 0)
-		{
-			m_bgScrollY = true;
-			UpdateTiles((float)m_pPlayer->GetVelY());
-		}
-	}
-	m_pPlayer->Update(m_bgScrollX, m_bgScrollY); // Change to player Update here.
+	
+	m_pPlayer->Update(); // Change to player Update here.
 	CheckCollision();
 }
 
@@ -164,13 +103,7 @@ void GameState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 0, 0, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	// Draw the platforms.
-	for (int row = 0; row < ROWS; row++)
-	{
-		for (int col = 0; col < COLS; col++)
-		{
-			m_level[row][col]->Render();
-		}
-	}
+	
 	// Draw the player.
 	m_pPlayer->Render();
 	// If GameState != current state.

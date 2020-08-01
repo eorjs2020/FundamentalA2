@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
-#define GRAV 4.0
+#define GRAV 0.0
 #define JUMPFORCE 50.0
 
 #include "Sprite.h"
@@ -10,7 +10,7 @@ class PlatformPlayer : public Sprite
 {
 public:
 	PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t);
-	void Update(bool sX, bool sY);
+	void Update();
 	void Render();
 	void Stop();
 	void StopX();
