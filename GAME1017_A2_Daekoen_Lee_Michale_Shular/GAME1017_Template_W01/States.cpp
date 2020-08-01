@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 
+
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
 void State::Render()
 {
@@ -37,7 +38,7 @@ void GameState::Enter()
 	}
 	m_pPlayer = new PlatformPlayer({ 0,0,0,0 }, { 512.0f,256.0f,32.0f,64.0f },
 		Engine::Instance().GetRenderer(), nullptr);
-	
+	obs = new Obstacle();
 }
 
 void GameState::Update()
@@ -78,6 +79,7 @@ void GameState::Update()
 			m_pPlatform[i]->GetDstP()->x = 1024;
 		}
 	}
+	obs->Update();
 }
 
 void GameState::UpdateTiles(float scroll, bool x)
@@ -130,10 +132,11 @@ void GameState::Render()
 		m_pBackgroundTwo[i]->Render();
 	for (int i = 0; i < 3; i++) 
 		m_pPlatform[i]->Render();
-	
+	obs->Render();
 	// If GameState != current state.
 	if (dynamic_cast<GameState*>(STMA::GetStates().back()))
 		State::Render();
+	
 }
 
 void GameState::Exit()

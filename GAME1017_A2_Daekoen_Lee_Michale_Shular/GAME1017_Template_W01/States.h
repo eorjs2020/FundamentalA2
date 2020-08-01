@@ -11,6 +11,7 @@
 #include "Button.h"
 #include "PlatformPlayer.h"
 #include "Tile.h"
+#include "Obstacle.h"
 
 class State // This is the abstract base class for all specific states.
 {
@@ -37,6 +38,7 @@ private:
 	int m_pSrollSpeed[3] = { 1, 2, 4 };
 	PlatformPlayer* m_pPlayer;
 	bool m_bgScrollX = false, m_bgScrollY = false;
+	Obstacle* obs;
 public:
 	GameState();
 	void Update();

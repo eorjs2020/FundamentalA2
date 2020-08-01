@@ -39,7 +39,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	// SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2"); // Call this before any textures are created.
 	TEMA::RegisterTexture("Img/play.png", "play");
 	TEMA::RegisterTexture("Img/Backgrounds.png", "background");
-
+	TEMA::RegisterTexture("Img/Obstacles.png", "Obs");
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	// Final engine initialization calls.
