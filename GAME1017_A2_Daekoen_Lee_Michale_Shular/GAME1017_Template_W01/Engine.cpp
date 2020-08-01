@@ -40,6 +40,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/play.png", "play");
 	TEMA::RegisterTexture("Img/Player.png", "player");
 	FOMA::RegisterFont("Img/LTYPE.TTF", "Font", 20);
+	TEMA::RegisterTexture("Img/Backgrounds.png", "background");
+	TEMA::RegisterTexture("Img/Obstacles.png", "Obs");
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	// Final engine initialization calls.

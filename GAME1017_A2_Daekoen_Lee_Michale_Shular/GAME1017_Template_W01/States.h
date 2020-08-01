@@ -13,6 +13,7 @@
 #include "Tile.h"
 #include "Timer.h"
 #include "Label.h"
+#include "Obstacle.h"
 
 class State // This is the abstract base class for all specific states.
 {
@@ -35,9 +36,13 @@ private:
 	std::array<std::array<Tile*, COLS>, ROWS> m_level; // Fixed-size STL array of Tile pointers.
 	std::vector<Tile*> m_platforms;
 	std::string m_TimerNum, m_defualtTimer = "Timer: 0", m_updateTimer;
+	Sprite* m_pBackgroundOne[2], *m_pBackgroundTwo[5];
+	Sprite* m_pPlatform[3];
+	int m_pSrollSpeed[3] = { 1, 2, 4 };
 	PlatformPlayer* m_pPlayer;
 	LTimer timer;
 	bool m_bgScrollX = false, m_bgScrollY = false;
+	Obstacle* obs;
 public:
 	GameState();
 	void Update();
