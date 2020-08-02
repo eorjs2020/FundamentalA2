@@ -14,7 +14,7 @@ void PatternManager::Update()
 {
 	
 
-	if (timer == 250 || timer == 0)
+	if (timer == 700 || timer == 0)
 	{
 		int i;
 		i = rand() % 3;
@@ -62,7 +62,7 @@ void PatternManager::Pattern(int n)
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), true));
 		m_obs.push_back(new Obstacle({ 129,65, 127, 63 }, { 1424,447,128,63 },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), false));
-		m_obs.push_back(new Obstacle({ 129,65, 127, 63 }, { 1424,447,128,63 },
+		m_obs.push_back(new Obstacle({ 129,65, 127, 63 }, { 1824,447,128,63 },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), false));
 		break;
 	default:
@@ -74,7 +74,7 @@ void PatternManager::Destory()
 {
 	for (auto i = 0; i < m_obs.size(); ++i)
 	{
-		if (m_obs[i]->GetDstP()->x < -50)
+		if (m_obs[i]->GetDstP()->x < -150)
 		{
 			delete m_obs[i];
 			m_obs[i] = nullptr;

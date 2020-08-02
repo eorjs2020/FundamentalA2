@@ -5,16 +5,22 @@
 void TextureManager::Init()
 {
 	if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) != 0)
-		std::cout << "Image init success!" << std::endl;
+	{
+		//std::cout << "Image init success!" << std::endl;
+	}
 	else
-		std::cout << "Image init failed: ERROR - " << IMG_GetError() << std::endl;
+	{
+		//std::cout << "Image init failed: ERROR - " << IMG_GetError() << std::endl;
+	}
 }
 
 void TextureManager::RegisterTexture(const char* path, const std::string key)
 {
 	SDL_Texture* temp = IMG_LoadTexture(Engine::Instance().GetRenderer(), path);
 	if (temp == nullptr)
-		std::cout << "Could not load texture: Error - " << IMG_GetError() << std::endl;
+	{
+		//std::cout << "Could not load texture: Error - " << IMG_GetError() << std::endl;
+	}
 	else
 		s_textures.emplace(key, temp);
 }

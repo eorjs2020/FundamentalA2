@@ -11,7 +11,7 @@ Obstacle::Obstacle(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, boo
 
 void Obstacle::Update()
 {
-	m_dst.x -= 4;
+	m_dst.x -= 2;
 	if (m_saw)
 	{
 		if(m_angle >= 360)

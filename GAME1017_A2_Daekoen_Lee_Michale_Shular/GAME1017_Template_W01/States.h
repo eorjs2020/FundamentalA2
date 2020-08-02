@@ -42,6 +42,7 @@ private:
 	int m_pSrollSpeed[3] = { 1, 2, 4 };
 	PlatformPlayer* m_pPlayer;
 	LTimer timer;
+	int deadtimer;
 	bool m_bgScrollX = false, m_bgScrollY = false, m_plose, m_pPause = false ;
 	PatternManager* m_pObs;
 public:

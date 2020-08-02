@@ -9,7 +9,7 @@
 #include "tinyxml2.h"
 #include <iostream>
 #include "PatternManager.h"
-
+#include <string>
 using namespace tinyxml2;
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -47,7 +47,7 @@ void GameState::Enter()
 		m_pPlatform[i] = new Sprite({ 1024, 511 , 512, 258 }, { float(0.0 + 512 * i), 510 ,512,258, },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
 	}
-
+	deadtimer = 0;
 	m_pObs = new PatternManager();
 }
 
@@ -57,55 +57,68 @@ void GameState::Update()
 	// Player input.
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 		m_pPause = !m_pPause;
-
+	
 	if (!m_pPause)
 	{
-		if (EVMA::KeyPressed(SDL_SCANCODE_G))
-			m_pPlayer->SetState(2);
-
-		if (EVMA::KeyHeld(SDL_SCANCODE_A) && m_pPlayer->GetDstP()->x > 0)
-			m_pPlayer->SetAccelX(-1.0);
-		else if (EVMA::KeyHeld(SDL_SCANCODE_D) && m_pPlayer->GetDstP()->x <= WIDTH - 64)
-			m_pPlayer->SetAccelX(1.0);
-		if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
+		if (m_plose && deadtimer == 0)
 		{
-			SOMA::PlaySound("jump");
-			m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
-			m_pPlayer->SetGrounded(false);
+			m_pPlayer->SetState(2);
+			
 		}
-		//// Wrap the player on screen.
-		if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
-		else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
-		// Do the rest. 
-		m_updateTimer = m_defualtTimer + timer.getrunnningtime(timer);
-		m_timer->SetText(m_updateTimer);
+		if (m_plose)
+		{
+			++deadtimer;
+		}
+		if (!m_plose)
+		{
+			if (EVMA::KeyHeld(SDL_SCANCODE_A) && m_pPlayer->GetDstP()->x > 0)
+				m_pPlayer->SetAccelX(-1.0);
+			else if (EVMA::KeyHeld(SDL_SCANCODE_D) && m_pPlayer->GetDstP()->x <= WIDTH - 64)
+				m_pPlayer->SetAccelX(1.0);
+			if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
+			{
+				SOMA::PlaySound("jump");
+				m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
+				m_pPlayer->SetGrounded(false);
+			}
+
+			//// Wrap the player on screen.
+			if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
+			else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
+			// Do the rest. 
+			m_updateTimer = m_defualtTimer + timer.getrunnningtime(timer);
+			m_timer->SetText(m_updateTimer);
+			
+
+			for (int i = 0; i < 2; i++) {
+				m_pBackgroundOne[i]->GetDstP()->x -= m_pSrollSpeed[0];
+				if (m_pBackgroundOne[i]->GetDstP()->x == -1024) {
+					m_pBackgroundOne[i]->GetDstP()->x = 1024;
+				}
+			}
+			for (int i = 0; i < 5; i++) {
+				m_pBackgroundTwo[i]->GetDstP()->x -= m_pSrollSpeed[1];
+				if (m_pBackgroundTwo[i]->GetDstP()->x == -256) {
+					m_pBackgroundTwo[i]->GetDstP()->x = 1024;
+				}
+			}
+
+			for (int i = 0; i < 3; i++) {
+				m_pPlatform[i]->GetDstP()->x -= m_pSrollSpeed[2];
+				if (m_pPlatform[i]->GetDstP()->x == -512) {
+					m_pPlatform[i]->GetDstP()->x = 1024;
+				}
+			}
+			m_pObs->Update();
+
+		}
 		m_pPlayer->Update(); // Change to player Update here.
 		CheckCollision();
-
-		for (int i = 0; i < 2; i++) {
-			m_pBackgroundOne[i]->GetDstP()->x -= m_pSrollSpeed[0];
-			if (m_pBackgroundOne[i]->GetDstP()->x == -1024) {
-				m_pBackgroundOne[i]->GetDstP()->x = 1024;
-			}
-		}
-		for (int i = 0; i < 5; i++) {
-			m_pBackgroundTwo[i]->GetDstP()->x -= m_pSrollSpeed[1];
-			if (m_pBackgroundTwo[i]->GetDstP()->x == -256) {
-				m_pBackgroundTwo[i]->GetDstP()->x = 1024;
-			}
-		}
-
-		for (int i = 0; i < 3; i++) {
-			m_pPlatform[i]->GetDstP()->x -= m_pSrollSpeed[2];
-			if (m_pPlatform[i]->GetDstP()->x == -512) {
-				m_pPlatform[i]->GetDstP()->x = 1024;
-			}
-		}
-		m_pObs->Update();
 	}
-	m_pObs->Update();
-	if(m_plose == true)
+	
+	if(deadtimer == 35)
 		STMA::ChangeState(new LoseState);
+	
 }
 
 void GameState::CheckCollision()
@@ -141,7 +154,10 @@ void GameState::CheckCollision()
 	{
 		if (!m_pObs->GetObs()[i]->Saw())
 		{
-			m_plose = true;
+			if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pObs->GetObs()[i]->GetDstP()))
+			{	
+				m_plose = true;
+			}
 		}
 		else
 		{
@@ -149,7 +165,7 @@ void GameState::CheckCollision()
 				m_pObs->GetObs()[i]->GetDstP()->y + m_pObs->GetObs()[i]->GetDstP()->h / 2 };
 			if (COMA::CircleAABBCheck(temp,	m_pObs->GetObs()[i]->GetDstP()->w / 2, *m_pPlayer->GetDstP()))
 			{
-				//std::cout << " fff" << std::endl;
+				m_plose = true;
 			}
 		}
 	}
@@ -214,17 +230,7 @@ void GameState::Exit()
 	pElement = pElement->NextSiblingElement();
 	pElement->SetAttribute("Minute", timer.m_minutes);
 	pElement->SetAttribute("Second", timer.m_seconds);
-	/*
-	XMLDocument xmlDoc;
-	xmlDoc.LoadFile("Score.xml");
-	XMLElement* pRoot = xmlDoc.FirstChildElement();
-	XMLElement* pElement = pRoot->FirstChildElement();
-	int m, s;
-	pElement = pElement->NextSiblingElement();
-	pElement->SetAttribute("Minute", &m);
-	pElement->SetAttribute("Second", &s);
-	xmlDoc.SaveFile("Score.xml");
-	*/
+	
 	xmlDoc.SaveFile("Score.xml");
 }
 
@@ -269,6 +275,7 @@ LoseState::LoseState() {}
 
 void LoseState::Update()
 {
+
 	if (m_pMenu->Update() == 1)
 		return;
 	if (m_pQuitButton->Update() == 1)
@@ -291,14 +298,39 @@ void LoseState::Render()
 
 void LoseState::Enter()
 {
+	
+	XMLDocument xmlDoc;
+	xmlDoc.LoadFile("Score.xml");
+	XMLElement* pRoot = xmlDoc.FirstChildElement();
+	XMLElement* pElement = pRoot->FirstChildElement();
+	int m, s;
+	pElement->QueryIntAttribute("Minute", &m);
+	pElement->QueryIntAttribute("Second", &s);
+	pElement = pElement->NextSiblingElement();
+	int cm, cs;
+	pElement->QueryIntAttribute("Minute", &cm);
+	pElement->QueryIntAttribute("Second", &cs);
+	xmlDoc.SaveFile("Score.xml");
+	
+	std::string bestM, bestS, currM, currS;
+	bestM = std::to_string(m);
+	bestS = std::to_string(s);
+	currM = std::to_string(cm);
+	currS = std::to_string(cs);
+
+	std::string BestTime, CurrTime;
+
+	BestTime = "BestTime : " + bestM + " : " + bestS;
+	CurrTime = "CurrentTime : " + currM + " : " + currS;
 	m_pMenu = new MenuButton({ 0,0,200,80 }, { 312.0f,100.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("menu"));
 	m_pQuitButton = new ExitButton({ 0,0,400,100 }, { 312.0f,250.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
-	m_score = new Label("Font", 312.0, 400, "gggg", { 255,255,255,255 });
-	m_bestScore = new Label("Font", 312.0, 450, "ggg", { 255,255,255,255 });
+	m_score = new Label("Font", 312.0, 400, CurrTime, { 255,255,255,255 });
+	m_bestScore = new Label("Font", 312.0, 450, BestTime, { 255,255,255,255 });
+
 }
 
 void LoseState::Exit()
