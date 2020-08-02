@@ -1,15 +1,14 @@
 #pragma once
 #include "Sprite.h"
 
-class Obstacle
+class Obstacle : public Sprite
 {
 public:
-	Obstacle();
+	Obstacle(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, bool saw);
 	void Update();
 	void Render();
 	
 private:
-	int genNum, choosenpattern;
-	enum state {patternone, patternTwo, patterthree } m_pstate;
-	Sprite* obstaclePatternOne[3],* obstaclePatternTwo[3], *obstaclePatternThree[3];
+	bool m_saw = false;
+	
 };

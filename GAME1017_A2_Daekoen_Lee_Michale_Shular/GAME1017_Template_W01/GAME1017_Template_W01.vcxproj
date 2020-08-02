@@ -124,6 +124,7 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="PatternManager.cpp" />
     <ClCompile Include="PlatformPlayer.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StateManager.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="PatternManager.h" />
     <ClInclude Include="PlatformPlayer.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StateManager.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Img\Backgrounds.png" />
