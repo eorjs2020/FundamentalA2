@@ -42,7 +42,7 @@ private:
 	int m_pSrollSpeed[3] = { 1, 2, 4 };
 	PlatformPlayer* m_pPlayer;
 	LTimer timer;
-	bool m_bgScrollX = false, m_bgScrollY = false;
+	bool m_bgScrollX = false, m_bgScrollY = false, m_pPause = false;
 	PatternManager* m_pObs;
 public:
 	GameState();

@@ -30,6 +30,7 @@ void PlatformPlayer::Update()
 	
 	m_dst.y += (int)m_velY; // To remove aliasing, I made cast it to an int too.
 	m_accelX = m_accelY = 0.0;
+	
 	switch (m_state)
 	{
 	
@@ -60,7 +61,13 @@ void PlatformPlayer::Update()
 		}
 
 		break;
+	case dead:
+	{
+
+		break;
 	}
+	}
+	
 	Animate();
 }
 
@@ -95,6 +102,7 @@ void PlatformPlayer::SetState(int s)
 	if (m_state == running)// Only other is running for now...
 	{
 	
+		m_src.x = 0;
 		m_src.y = 0;
 		m_src.h = 128;
 		m_dst.y -= 32;
@@ -115,6 +123,18 @@ void PlatformPlayer::SetState(int s)
 		m_spriteMax = 3;
 		
 	}
+	else if (m_state == dead)
+	{
+		m_frame = 4;
+		m_src.x = 512;
+		m_src.y = 128;
+		m_src.h = 128;
+		m_dst.h = 64;
+		m_sprite = 4;
+		m_spriteMin = 4;
+		m_spriteMax = 8;
+	}
+
 	
 }
 

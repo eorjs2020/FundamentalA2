@@ -1,8 +1,8 @@
 #pragma once
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
-#define GRAV 4.0
-#define JUMPFORCE 10.0
+#define GRAV 3.0
+#define JUMPFORCE 30.0
 
 #include "Sprite.h"
 
@@ -25,7 +25,7 @@ public:
 	void SetY(float y);
 	void SetState(int s);
 private:
-	enum state { running, rolling } m_state;
+	enum state { running, rolling, dead } m_state;
 	bool m_dir;
 	
 	bool m_grounded;

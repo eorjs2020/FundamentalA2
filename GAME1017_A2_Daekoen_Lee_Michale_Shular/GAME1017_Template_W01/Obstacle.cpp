@@ -25,3 +25,8 @@ void Obstacle::Render()
 	SDL_RenderCopyExF(m_pRend, m_pText, GetSrcP(), GetDstP(), m_angle, 0, SDL_FLIP_NONE);
 }
 
+bool Obstacle::Saw()
+{
+	return m_saw;
+}
+

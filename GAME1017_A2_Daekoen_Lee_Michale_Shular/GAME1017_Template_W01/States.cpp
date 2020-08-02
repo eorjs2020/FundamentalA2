@@ -53,45 +53,54 @@ void GameState::Enter()
 void GameState::Update()
 {
 	// Player input.
-	if (EVMA::KeyHeld(SDL_SCANCODE_A) && m_pPlayer->GetDstP()->x <= 30)
-		m_pPlayer->SetAccelX(-1.0);
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D) && m_pPlayer->GetDstP()->x >= WIDTH - 400)
-		m_pPlayer->SetAccelX(1.0);
-	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
-	{
-		SOMA::PlaySound("jump");
-		m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
-		m_pPlayer->SetGrounded(false);
-	}
-	//// Wrap the player on screen.
-	if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
-	else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
-	// Do the rest. 
-	m_updateTimer = m_defualtTimer + timer.getrunnningtime(timer);
-	m_timer->SetText(m_updateTimer);
-	m_pPlayer->Update(); // Change to player Update here.
-	CheckCollision();
+	if (EVMA::KeyPressed(SDL_SCANCODE_P))
+		m_pPause = !m_pPause;
 
-	for (int i = 0; i < 2; i++) {
-		m_pBackgroundOne[i]->GetDstP()->x -= m_pSrollSpeed[0];
-		if (m_pBackgroundOne[i]->GetDstP()->x == - 1024 ) {
-			m_pBackgroundOne[i]->GetDstP()->x = 1024;
+	if (!m_pPause)
+	{
+		if (EVMA::KeyPressed(SDL_SCANCODE_G))
+			m_pPlayer->SetState(2);
+
+		if (EVMA::KeyHeld(SDL_SCANCODE_A) && m_pPlayer->GetDstP()->x > 0)
+			m_pPlayer->SetAccelX(-1.0);
+		else if (EVMA::KeyHeld(SDL_SCANCODE_D) && m_pPlayer->GetDstP()->x <= WIDTH - 64)
+			m_pPlayer->SetAccelX(1.0);
+		if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
+		{
+			SOMA::PlaySound("jump");
+			m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
+			m_pPlayer->SetGrounded(false);
 		}
-	}
-	for (int i = 0; i < 5; i++) {
-		m_pBackgroundTwo[i]->GetDstP()->x -= m_pSrollSpeed[1];
-		if (m_pBackgroundTwo[i]->GetDstP()->x == -256) {
-			m_pBackgroundTwo[i]->GetDstP()->x = 1024;
+		//// Wrap the player on screen.
+		if (m_pPlayer->GetDstP()->x < -51.0) m_pPlayer->SetX(1024.0);
+		else if (m_pPlayer->GetDstP()->x > 1024.0) m_pPlayer->SetX(-50.0);
+		// Do the rest. 
+		m_updateTimer = m_defualtTimer + timer.getrunnningtime(timer);
+		m_timer->SetText(m_updateTimer);
+		m_pPlayer->Update(); // Change to player Update here.
+		CheckCollision();
+
+		for (int i = 0; i < 2; i++) {
+			m_pBackgroundOne[i]->GetDstP()->x -= m_pSrollSpeed[0];
+			if (m_pBackgroundOne[i]->GetDstP()->x == -1024) {
+				m_pBackgroundOne[i]->GetDstP()->x = 1024;
+			}
 		}
-	}
-	
-	for (int i = 0; i < 3; i++) {
-		m_pPlatform[i]->GetDstP()->x -= m_pSrollSpeed[2];
-		if (m_pPlatform[i]->GetDstP()->x == -512) {
-			m_pPlatform[i]->GetDstP()->x = 1024;
+		for (int i = 0; i < 5; i++) {
+			m_pBackgroundTwo[i]->GetDstP()->x -= m_pSrollSpeed[1];
+			if (m_pBackgroundTwo[i]->GetDstP()->x == -256) {
+				m_pBackgroundTwo[i]->GetDstP()->x = 1024;
+			}
 		}
+
+		for (int i = 0; i < 3; i++) {
+			m_pPlatform[i]->GetDstP()->x -= m_pSrollSpeed[2];
+			if (m_pPlatform[i]->GetDstP()->x == -512) {
+				m_pPlatform[i]->GetDstP()->x = 1024;
+			}
+		}
+		m_pObs->Update();
 	}
-	m_pObs->Update();
 }
 
 void GameState::CheckCollision()
@@ -125,12 +134,22 @@ void GameState::CheckCollision()
 	}
 	for (auto i = 0; i < m_pObs->GetObs().size(); i++)
 	{
-		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pObs->GetObs()[i]->GetDstP()))
+		if (!m_pObs->GetObs()[i]->Saw())
 		{
-			//std::cout << "cl" << std:: endl;
+			if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pObs->GetObs()[i]->GetDstP()))
+			{
+				//std::cout << "cl" << std:: endl;
+			}
 		}
-		
-		
+		else
+		{
+			SDL_FPoint temp = { m_pObs->GetObs()[i]->GetDstP()->x + m_pObs->GetObs()[i]->GetDstP()->w / 2, 
+				m_pObs->GetObs()[i]->GetDstP()->y + m_pObs->GetObs()[i]->GetDstP()->h / 2 };
+			if (COMA::CircleAABBCheck(temp,	m_pObs->GetObs()[i]->GetDstP()->w / 2, *m_pPlayer->GetDstP()))
+			{
+				//std::cout << " fff" << std::endl;
+			}
+		}
 	}
 
 }
@@ -174,7 +193,7 @@ void GameState::Exit()
 	pElement->QueryIntAttribute("Second", &s);
 	if (m <= timer.m_minutes)
 	{
-		if (m = timer.m_minutes)
+		if (m == timer.m_minutes)
 		{
 			if (s < timer.m_seconds)
 			{
@@ -189,6 +208,20 @@ void GameState::Exit()
 			pElement->SetAttribute("Second", timer.m_seconds);
 		}
 	}
+	pElement = pElement->NextSiblingElement();
+	pElement->SetAttribute("Minute", timer.m_minutes);
+	pElement->SetAttribute("Second", timer.m_seconds);
+	/*
+	XMLDocument xmlDoc;
+	xmlDoc.LoadFile("Score.xml");
+	XMLElement* pRoot = xmlDoc.FirstChildElement();
+	XMLElement* pElement = pRoot->FirstChildElement();
+	int m, s;
+	pElement = pElement->NextSiblingElement();
+	pElement->SetAttribute("Minute", &m);
+	pElement->SetAttribute("Second", &s);
+	xmlDoc.SaveFile("Score.xml");
+	*/
 	xmlDoc.SaveFile("Score.xml");
 }
 
