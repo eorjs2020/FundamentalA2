@@ -14,6 +14,7 @@
 #include "Timer.h"
 #include "Label.h"
 #include "Obstacle.h"
+#include "PatternManager.h"
 
 class State // This is the abstract base class for all specific states.
 {
@@ -42,7 +43,7 @@ private:
 	PlatformPlayer* m_pPlayer;
 	LTimer timer;
 	bool m_bgScrollX = false, m_bgScrollY = false;
-	Obstacle* obs;
+	PatternManager* m_pObs;
 public:
 	GameState();
 	void Update();

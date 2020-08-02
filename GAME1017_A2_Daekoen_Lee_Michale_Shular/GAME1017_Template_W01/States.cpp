@@ -8,6 +8,7 @@
 #include "Button.h"
 #include "tinyxml2.h"
 #include <iostream>
+#include "PatternManager.h"
 
 using namespace tinyxml2;
 
@@ -46,7 +47,7 @@ void GameState::Enter()
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
 	}
 
-	obs = new Obstacle();
+	m_pObs = new PatternManager();
 }
 
 void GameState::Update()
@@ -70,6 +71,7 @@ void GameState::Update()
 	m_timer->SetText(m_updateTimer);
 	m_pPlayer->Update(); // Change to player Update here.
 	CheckCollision();
+
 	for (int i = 0; i < 2; i++) {
 		m_pBackgroundOne[i]->GetDstP()->x -= m_pSrollSpeed[0];
 		if (m_pBackgroundOne[i]->GetDstP()->x == - 1024 ) {
@@ -82,18 +84,14 @@ void GameState::Update()
 			m_pBackgroundTwo[i]->GetDstP()->x = 1024;
 		}
 	}
+	
 	for (int i = 0; i < 3; i++) {
 		m_pPlatform[i]->GetDstP()->x -= m_pSrollSpeed[2];
 		if (m_pPlatform[i]->GetDstP()->x == -512) {
 			m_pPlatform[i]->GetDstP()->x = 1024;
 		}
 	}
-	obs->Update();
-}
-
-void GameState::UpdateTiles(float scroll, bool x)
-{
-	
+	m_pObs->Update();
 }
 
 void GameState::CheckCollision()
@@ -125,6 +123,16 @@ void GameState::CheckCollision()
 			}
 		}
 	}
+	for (auto i = 0; i < m_pObs->GetObs().size(); i++)
+	{
+		if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pObs->GetObs()[i]->GetDstP()))
+		{
+			//std::cout << "cl" << std:: endl;
+		}
+		
+		
+	}
+
 }
 
 void GameState::Render()
@@ -137,9 +145,13 @@ void GameState::Render()
 		m_pBackgroundOne[i]->Render();
 	for (int i = 0; i < 5; i++)
 		m_pBackgroundTwo[i]->Render();
+	for (auto i = 0; i < m_pObs->GetObs().size(); ++i)
+	{
+		m_pObs->GetObs()[i]->Render();
+	}
 	for (int i = 0; i < 3; i++) 
 		m_pPlatform[i]->Render();
-	obs->Render();
+	
 	m_timer->Render();
 	// Draw the player.
 	m_pPlayer->Render();

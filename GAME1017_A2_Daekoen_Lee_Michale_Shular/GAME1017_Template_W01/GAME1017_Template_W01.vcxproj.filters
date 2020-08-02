@@ -66,6 +66,9 @@
     <ClCompile Include="Obstacle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PatternManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h">
@@ -120,6 +123,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Obstacle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PatternManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
