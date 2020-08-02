@@ -251,6 +251,8 @@ void LoseState::Render()
 	m_pBackground->Render();
 	m_pMenu->Render();
 	m_pQuitButton->Render();
+	m_bestScore->Render();
+	m_score->Render();
 	
 	State::Render();
 
@@ -264,6 +266,8 @@ void LoseState::Enter()
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
+	m_score = new Label("Font", 312.0, 400, "gggg", { 255,255,255,255 });
+	m_bestScore = new Label("Font", 312.0, 450, "ggg", { 255,255,255,255 });
 }
 
 void LoseState::Exit()

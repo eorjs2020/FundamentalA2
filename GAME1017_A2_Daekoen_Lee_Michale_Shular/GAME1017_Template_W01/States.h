@@ -47,12 +47,13 @@ private:
 public:
 	GameState();
 	void Update();
-	void UpdateTiles(float scroll, bool x = false);
+	//void UpdateTiles(float scroll, bool x = false);
 	void CheckCollision();
 	void Render();
 	void Enter();
 	void Exit();
 	void Resume();
+	std::string getTimer() { return m_updateTimer; }
 };
 
 class TitleState : public State
@@ -79,6 +80,7 @@ public:
 private:
 	Button* m_pQuitButton, * m_pMenu;
 	Sprite* m_pBackground;
+	Label* m_score, *m_bestScore;
 };
 
 
