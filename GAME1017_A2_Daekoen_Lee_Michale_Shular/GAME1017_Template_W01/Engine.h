@@ -19,10 +19,11 @@ public: // Public methods.
 	static Engine& Instance(); // This static method creates the static instance that can be accessed 'globally'
 	SDL_Renderer* GetRenderer();
 	bool& Running();
+	bool& Pause();
 	//std::array<std::array<Tile*, COLS>, ROWS>& GetLevel() { return m_level; }
 
 private: // Private properties.
-	bool m_running; // Loop control flag.
+	bool m_running, m_pause; // Loop control flag.
 	Uint32 m_start, m_end, m_delta, m_fps; // Fixed timestep variables.
 	SDL_Window* m_pWindow; // This represents the SDL window.
 	SDL_Renderer* m_pRenderer; // This represents the buffer to draw to.

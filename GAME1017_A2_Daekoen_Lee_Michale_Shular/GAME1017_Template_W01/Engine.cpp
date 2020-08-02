@@ -43,6 +43,11 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/Backgrounds.png", "background");
 	TEMA::RegisterTexture("Img/main.png", "menu");
 	TEMA::RegisterTexture("Img/exit.png", "exit");
+	TEMA::RegisterTexture("Img/quitButton.png", "quit");
+	TEMA::RegisterTexture("Img/pauseButton.png", "pause");
+	TEMA::RegisterTexture("Img/resumeButton.png", "resume");
+	TEMA::RegisterTexture("Img/tutorialButton.png", "tutorial");
+	TEMA::RegisterTexture("Img/mainmenuButton.png", "mainmenu");
 	TEMA::RegisterTexture("Img/Obstacles.png", "Obs");
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::Load("Aud/death.wav", "death", SOUND_SFX);
@@ -51,6 +56,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	// Final engine initialization calls.
 	m_fps = (Uint32)round((1 / (double)FPS) * 1000); // Sets FPS in milliseconds and rounds.
 	m_running = true; // Everything is okay, start the engine.
+	m_pause = false;
 	cout << "Engine Init success!" << endl;
 	return true;
 }
@@ -128,3 +134,8 @@ Engine& Engine::Instance()
 
 SDL_Renderer* Engine::GetRenderer() { return m_pRenderer; }
 bool& Engine::Running() { return m_running; }
+
+bool& Engine::Pause()
+{
+	return m_pause;
+}

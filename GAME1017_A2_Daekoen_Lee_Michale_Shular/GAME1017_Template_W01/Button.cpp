@@ -66,6 +66,7 @@ void PlayButton::Execute()
 
 void MenuButton::Execute()
 {
+	SOMA::PlaySound("beep");
 	STMA::ChangeState(new TitleState);
 }
 
@@ -74,8 +75,22 @@ MenuButton::MenuButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture
 
 void ExitButton::Execute()
 {
+	SOMA::PlaySound("beep");
 	Engine::Instance().Running() = false;
 }
 
 ExitButton::ExitButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
 
+void ResumeButton::Execute()
+{
+	Engine::Instance().Pause() = false;
+}
+
+ResumeButton::ResumeButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) : Button(src, dst, r, t) {}
+
+void PauseButton::Execute()
+{
+	Engine::Instance().Pause() = true;
+}
+
+PauseButton::PauseButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
