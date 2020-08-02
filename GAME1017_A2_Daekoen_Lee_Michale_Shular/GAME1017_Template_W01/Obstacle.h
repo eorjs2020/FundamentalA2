@@ -7,7 +7,7 @@ public:
 	Obstacle(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, bool saw);
 	void Update();
 	void Render();
-	
+	bool Saw();
 private:
 	bool m_saw = false;
 	
