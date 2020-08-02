@@ -1,8 +1,8 @@
 #pragma once
 #ifndef _PLATFORMPLAYER_H_
 #define _PLATFORMPLAYER_H_
-#define GRAV 4.0
-#define JUMPFORCE 10.0
+#define GRAV 2.0
+#define JUMPFORCE 30.0
 
 #include "Sprite.h"
 

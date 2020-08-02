@@ -29,5 +29,20 @@ public:
 	void Foo() {}
 };
 
+class MenuButton : public Button
+{
+private:
+	void Execute();
+public:
+	MenuButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
+};
+
+class ExitButton : public Button
+{
+private:
+	void Execute();
+public:
+	ExitButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t);
+};
 
 #endif

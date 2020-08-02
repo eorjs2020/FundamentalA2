@@ -63,3 +63,19 @@ void PlayButton::Execute()
 	SOMA::PlaySound("beep");
 	STMA::ChangeState(new GameState);
 }
+
+void MenuButton::Execute()
+{
+	STMA::ChangeState(new TitleState);
+}
+
+MenuButton::MenuButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
+
+
+void ExitButton::Execute()
+{
+	Engine::Instance().Running() = false;
+}
+
+ExitButton::ExitButton(SDL_Rect src, SDL_FRect dst, SDL_Renderer* r, SDL_Texture* t) :Button(src, dst, r, t) {}
+
