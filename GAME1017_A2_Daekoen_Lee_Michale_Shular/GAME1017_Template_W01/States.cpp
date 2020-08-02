@@ -254,9 +254,9 @@ void LoseState::Render()
 void LoseState::Enter()
 {
 	m_pMenu = new MenuButton({ 0,0,400,100 }, { 312.0f,100.0f,400.0f,100.0f },
-		Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("menu"));
 	m_pQuitButton = new ExitButton({ 0,0,400,100 }, { 312.0f,250.0f,400.0f,100.0f },
-		Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 }
 
 void LoseState::Exit()
