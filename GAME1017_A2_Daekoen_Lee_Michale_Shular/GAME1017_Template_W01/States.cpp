@@ -207,6 +207,8 @@ void TitleState::Enter()
 {
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,100.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
 }
 
@@ -220,6 +222,7 @@ void TitleState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 128, 0, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	m_pBackground->Render();
 	m_playBtn->Render();
 	State::Render();
 }
@@ -245,18 +248,22 @@ void LoseState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 128, 0, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	m_pBackground->Render();
 	m_pMenu->Render();
 	m_pQuitButton->Render();
+	
 	State::Render();
 
 }
 
 void LoseState::Enter()
 {
-	m_pMenu = new MenuButton({ 0,0,400,100 }, { 312.0f,100.0f,400.0f,100.0f },
+	m_pMenu = new MenuButton({ 0,0,200,80 }, { 312.0f,100.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("menu"));
 	m_pQuitButton = new ExitButton({ 0,0,400,100 }, { 312.0f,250.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
+	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
 }
 
 void LoseState::Exit()
