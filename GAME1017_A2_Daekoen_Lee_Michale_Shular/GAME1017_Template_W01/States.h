@@ -32,27 +32,28 @@ class GameState : public State
 {
 private:
 	Label* m_timer;
-	SDL_Texture *m_pTileText;
-	std::map<char, Tile*> m_tiles;
-	std::array<std::array<Tile*, COLS>, ROWS> m_level; // Fixed-size STL array of Tile pointers.
-	std::vector<Tile*> m_platforms;
+	//SDL_Texture *m_pTileText;
+	//std::map<char, Tile*> m_tiles;
+	//std::array<std::array<Tile*, COLS>, ROWS> m_level; // Fixed-size STL array of Tile pointers.
+	//std::vector<Tile*> m_platforms;
 	std::string m_TimerNum, m_defualtTimer = "Timer: 0", m_updateTimer;
 	Sprite* m_pBackgroundOne[2], *m_pBackgroundTwo[5];
 	Sprite* m_pPlatform[3];
 	int m_pSrollSpeed[3] = { 1, 2, 4 };
 	PlatformPlayer* m_pPlayer;
 	LTimer timer;
-	bool m_bgScrollX = false, m_bgScrollY = false, m_pPause = false;
+	bool m_bgScrollX = false, m_bgScrollY = false, m_plose, m_pPause = false ;
 	PatternManager* m_pObs;
 public:
 	GameState();
 	void Update();
-	void UpdateTiles(float scroll, bool x = false);
+	//void UpdateTiles(float scroll, bool x = false);
 	void CheckCollision();
 	void Render();
 	void Enter();
 	void Exit();
 	void Resume();
+	std::string getTimer() { return m_updateTimer; }
 };
 
 class TitleState : public State
@@ -65,6 +66,22 @@ public:
 	void Exit();
 private:
 	Button* m_playBtn;
+	Sprite* m_pBackground;
 };
+
+class LoseState : public State
+{
+public:
+	LoseState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Button* m_pQuitButton, * m_pMenu;
+	Sprite* m_pBackground;
+	Label* m_score, *m_bestScore;
+};
+
 
 #endif

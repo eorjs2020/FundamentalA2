@@ -157,6 +157,12 @@
     <Image Include="Img\Player.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Img\main.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Img\exit.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dat\Level1.txt">
@@ -170,5 +176,13 @@
     <Xml Include="Score.xml">
       <Filter>Resource Files</Filter>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Aud\jump.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Aud\death.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

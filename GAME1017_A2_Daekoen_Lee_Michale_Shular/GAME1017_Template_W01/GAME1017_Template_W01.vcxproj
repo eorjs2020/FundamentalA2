@@ -162,6 +162,8 @@
     <Image Include="Img\Backgrounds.png" />
     <Image Include="img\circle.png" />
     <Image Include="Img\Enemies.png" />
+    <Image Include="Img\exit.png" />
+    <Image Include="Img\main.png" />
     <Image Include="Img\Obstacles.png" />
     <Image Include="Img\play.png" />
     <Image Include="Img\Player.png" />
@@ -174,6 +176,10 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Score.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Aud\death.wav" />
+    <Media Include="Aud\jump.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

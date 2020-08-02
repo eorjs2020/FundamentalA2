@@ -28,9 +28,10 @@ void GameState::Enter()
 {
 	
 	std::cout << "Entering GameState..." << std::endl;
+	m_plose = false;
 	m_pPlayer = new PlatformPlayer({ 0,0,128,128 }, { 60.0f,200.0f,64.0f,64.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("player"), 0, 0, 7, 7);
-	m_pTileText = IMG_LoadTexture(Engine::Instance().GetRenderer(), "Img/Tiles.png");
+	/*m_pTileText = IMG_LoadTexture(Engine::Instance().GetRenderer(), "Img/Tiles.png");*/
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	m_timer = new Label("Font", 850, 10, m_defualtTimer, { 255,255,255,255 });
 	timer.start();
@@ -52,6 +53,7 @@ void GameState::Enter()
 
 void GameState::Update()
 {
+
 	// Player input.
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 		m_pPause = !m_pPause;
@@ -101,6 +103,9 @@ void GameState::Update()
 		}
 		m_pObs->Update();
 	}
+	m_pObs->Update();
+	if(m_plose == true)
+		STMA::ChangeState(new LoseState);
 }
 
 void GameState::CheckCollision()
@@ -136,10 +141,7 @@ void GameState::CheckCollision()
 	{
 		if (!m_pObs->GetObs()[i]->Saw())
 		{
-			if (COMA::AABBCheck(*m_pPlayer->GetDstP(), *m_pObs->GetObs()[i]->GetDstP()))
-			{
-				//std::cout << "cl" << std:: endl;
-			}
+			m_plose = true;
 		}
 		else
 		{
@@ -184,6 +186,7 @@ void GameState::Render()
 void GameState::Exit()
 {
 	delete m_pPlayer;
+	delete m_pObs;
 	XMLDocument xmlDoc;
 	xmlDoc.LoadFile("Score.xml");
 	XMLElement* pRoot = xmlDoc.FirstChildElement();
@@ -235,6 +238,8 @@ void TitleState::Enter()
 {
 	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,100.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
 }
 
@@ -248,6 +253,7 @@ void TitleState::Render()
 {
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 128, 0, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
+	m_pBackground->Render();
 	m_playBtn->Render();
 	State::Render();
 }
@@ -258,3 +264,43 @@ void TitleState::Exit()
 	delete m_playBtn;
 }
 // End TitleState.
+
+LoseState::LoseState() {}
+
+void LoseState::Update()
+{
+	if (m_pMenu->Update() == 1)
+		return;
+	if (m_pQuitButton->Update() == 1)
+	return;
+}
+
+void LoseState::Render()
+{
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 128, 0, 255, 255);
+	SDL_RenderClear(Engine::Instance().GetRenderer());
+	m_pBackground->Render();
+	m_pMenu->Render();
+	m_pQuitButton->Render();
+	m_bestScore->Render();
+	m_score->Render();
+	
+	State::Render();
+
+}
+
+void LoseState::Enter()
+{
+	m_pMenu = new MenuButton({ 0,0,200,80 }, { 312.0f,100.0f,400.0f,100.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("menu"));
+	m_pQuitButton = new ExitButton({ 0,0,400,100 }, { 312.0f,250.0f,400.0f,100.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
+	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
+	m_score = new Label("Font", 312.0, 400, "gggg", { 255,255,255,255 });
+	m_bestScore = new Label("Font", 312.0, 450, "ggg", { 255,255,255,255 });
+}
+
+void LoseState::Exit()
+{
+}

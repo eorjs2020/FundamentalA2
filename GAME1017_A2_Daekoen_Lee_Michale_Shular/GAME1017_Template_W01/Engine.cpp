@@ -41,7 +41,11 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/Player.png", "player");
 	FOMA::RegisterFont("Img/LTYPE.TTF", "Font", 20);
 	TEMA::RegisterTexture("Img/Backgrounds.png", "background");
+	TEMA::RegisterTexture("Img/main.png", "menu");
+	TEMA::RegisterTexture("Img/exit.png", "exit");
 	TEMA::RegisterTexture("Img/Obstacles.png", "Obs");
+	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
+	SOMA::Load("Aud/death.wav", "death", SOUND_SFX);
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
 	// Final engine initialization calls.

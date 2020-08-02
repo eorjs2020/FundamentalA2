@@ -41,11 +41,11 @@ void PatternManager::Pattern(int n)
 	switch (n)
 	{
 	case 0:
-		m_obs.push_back(new Obstacle({ 0,0, 128, 448 }, { 1024 ,0, 128, 448 },
+		m_obs.push_back(new Obstacle({ 0,0, 128, 448 }, { 1024 ,0, 128, 460 },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), false));
 		m_obs.push_back(new Obstacle({ 129,65, 127, 63 }, { 1424,447,128,63 },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), false));
-		m_obs.push_back(new Obstacle({ 0,0, 128, 448 }, { 1824 ,0, 128, 448 },
+		m_obs.push_back(new Obstacle({ 0,0, 128, 448 }, { 1824 ,0, 128, 460 },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), false));
 		break;
 	case 1:
@@ -53,7 +53,7 @@ void PatternManager::Pattern(int n)
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), true));
 		m_obs.push_back(new Obstacle({ 129,65, 127, 63 }, { 1424,447,128,63 },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), false));
-		m_obs.push_back(new Obstacle({ 0,0, 128, 448 }, { 1824 ,0, 128, 448 },
+		m_obs.push_back(new Obstacle({ 0,0, 128, 448 }, { 1824 ,0, 128, 460 },
 			Engine::Instance().GetRenderer(), TEMA::GetTexture("Obs"), false));
 			
 		break;
