@@ -165,9 +165,11 @@
     <Image Include="Img\exit.png" />
     <Image Include="Img\main.png" />
     <Image Include="Img\Obstacles.png" />
+    <Image Include="Img\pauseButton.png" />
     <Image Include="Img\play.png" />
     <Image Include="Img\Player.png" />
     <Image Include="Img\PlayerShip.png" />
+    <Image Include="Img\resumeButton.png" />
     <Image Include="Img\Tiles.png" />
   </ItemGroup>
   <ItemGroup>
