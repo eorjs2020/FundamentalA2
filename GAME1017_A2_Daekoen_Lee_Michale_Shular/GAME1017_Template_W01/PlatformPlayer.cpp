@@ -4,6 +4,7 @@
 #include <iostream>
 #include "EventManager.h"
 #include "TextureManager.h"
+#include "SoundManager.h"
 
 PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Texture* t, int sstart, int smin, int smax, int nf)
 	:AnimatedSprite(s, d, r, t, sstart, smin, smax, nf), m_state(running), m_dir(0)
@@ -14,6 +15,7 @@ PlatformPlayer::PlatformPlayer(SDL_Rect s, SDL_FRect d, SDL_Renderer* r, SDL_Tex
 	m_maxVelY = JUMPFORCE;
 	m_grav = GRAV;
 	m_drag = 0.88;
+	
 }
 
 void PlatformPlayer::Update()
@@ -63,7 +65,7 @@ void PlatformPlayer::Update()
 		break;
 	case dead:
 	{
-
+		SOMA::PlaySound("death", 0, 2);
 		break;
 	}
 	}

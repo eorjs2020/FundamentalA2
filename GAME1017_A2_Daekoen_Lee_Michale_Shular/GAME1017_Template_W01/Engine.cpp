@@ -49,6 +49,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/tutorialButton.png", "tutorial");
 	TEMA::RegisterTexture("Img/mainmenuButton.png", "mainmenu");
 	TEMA::RegisterTexture("Img/Obstacles.png", "Obs");
+	TEMA::RegisterTexture("Img/TitleName.png", "TitleName");
 	SOMA::Load("Aud/jump.wav", "jump", SOUND_SFX);
 	SOMA::Load("Aud/death.wav", "death", SOUND_SFX);
 	STMA::ChangeState(new TitleState);

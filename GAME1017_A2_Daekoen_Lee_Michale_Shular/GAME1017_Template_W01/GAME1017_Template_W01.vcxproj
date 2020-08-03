@@ -171,6 +171,7 @@
     <Image Include="Img\PlayerShip.png" />
     <Image Include="Img\resumeButton.png" />
     <Image Include="Img\Tiles.png" />
+    <Image Include="Img\TitleName.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Dat\Level1.txt" />
