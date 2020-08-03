@@ -5,11 +5,11 @@
 #include "StateManager.h" // Make sure this is NOT in "States.h" or circular reference.
 #include "TextureManager.h"
 #include "Engine.h"
-#include "Button.h"
 #include "tinyxml2.h"
 #include <iostream>
 #include "PatternManager.h"
 #include <string>
+
 using namespace tinyxml2;
 
 // Begin State. CTRL+M+H and CTRL+M+U to turn on/off collapsed code.
@@ -26,7 +26,14 @@ GameState::GameState() {}
 
 void GameState::Enter()
 {
-	
+
+	m_pQuitBtn = new ExitButton({ 0,0,490,140 }, { 380.0f,280.0f,240.0f,70.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("quit"));
+	m_pResumeBtn = new ResumeButton({ 0,0,490,140 }, { 380.0f,420.0f,240.0f,70.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("resume"));
+	m_pPauseBtn = new PauseButton({ 0,0,490,140 }, { 2.0f,2.0f,240.0f,70.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("pause"));
+
 	std::cout << "Entering GameState..." << std::endl;
 	m_plose = false;
 	m_pPlayer = new PlatformPlayer({ 0,0,128,128 }, { 60.0f,200.0f,64.0f,64.0f },
@@ -53,13 +60,12 @@ void GameState::Enter()
 
 void GameState::Update()
 {
-
-	// Player input.
-	if (EVMA::KeyPressed(SDL_SCANCODE_P))
-		m_pPause = !m_pPause;
-	
-	if (!m_pPause)
+		
+	if (!Engine::Instance().Pause())
 	{
+		if (m_pPauseBtn->Update() == 1)
+			return;
+
 		if (m_plose && deadtimer == 0)
 		{
 			m_pPlayer->SetState(2);
@@ -114,6 +120,13 @@ void GameState::Update()
 		}
 		m_pPlayer->Update(); // Change to player Update here.
 		CheckCollision();
+	}
+	else
+	{
+		if (m_pQuitBtn->Update() == 1)
+			return;
+		if (m_pResumeBtn->Update() == 1)
+			return;
 	}
 	
 	if(deadtimer == 35)
@@ -188,7 +201,14 @@ void GameState::Render()
 	}
 	for (int i = 0; i < 3; i++) 
 		m_pPlatform[i]->Render();
-	
+	if (Engine::Instance().Pause())
+	{
+		m_pQuitBtn->Render();
+		m_pResumeBtn->Render();
+		
+	}
+	else
+		m_pPauseBtn->Render();
 	m_timer->Render();
 	// Draw the player.
 	m_pPlayer->Render();
@@ -279,7 +299,7 @@ void LoseState::Update()
 	if (m_pMenu->Update() == 1)
 		return;
 	if (m_pQuitButton->Update() == 1)
-	return;
+		return;
 }
 
 void LoseState::Render()

@@ -45,6 +45,7 @@ private:
 	int deadtimer;
 	bool m_bgScrollX = false, m_bgScrollY = false, m_plose, m_pPause = false ;
 	PatternManager* m_pObs;
+	Button* m_pQuitBtn, * m_pPauseBtn, * m_pResumeBtn;
 public:
 	GameState();
 	void Update();
