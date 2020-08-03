@@ -66,8 +66,9 @@ public:
 	void Enter();
 	void Exit();
 private:
-	Button* m_playBtn;
+	Button* m_playBtn, * m_pQuitButton;
 	Sprite* m_pBackground;
+	Sprite* m_pName;
 };
 
 class LoseState : public State

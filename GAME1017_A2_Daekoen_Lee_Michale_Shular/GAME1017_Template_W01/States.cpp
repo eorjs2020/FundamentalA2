@@ -77,7 +77,7 @@ void GameState::Update()
 				m_pPlayer->SetAccelX(1.0);
 			if (EVMA::KeyPressed(SDL_SCANCODE_SPACE) && m_pPlayer->IsGrounded())
 			{
-				SOMA::PlaySound("jump");
+				SOMA::PlaySound("jump", 0, 1);
 				m_pPlayer->SetAccelY(-JUMPFORCE); // Sets the jump force.
 				m_pPlayer->SetGrounded(false);
 			}
@@ -242,16 +242,22 @@ TitleState::TitleState() {}
 
 void TitleState::Enter()
 {
-	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,100.0f,400.0f,100.0f },
+	m_playBtn = new PlayButton({ 0,0,400,100 }, { 312.0f,400.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("play"));
+	m_pQuitButton = new ExitButton({ 0,0,400,100 }, { 312.0f,550.0f,400.0f,100.0f },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
 	SOMA::Load("Aud/power.wav", "beep", SOUND_SFX);
+	m_pName = new Sprite({ 0,0, 1053, 136 }, { 312.0f,100.0f,500,60 },
+		Engine::Instance().GetRenderer(), TEMA::GetTexture("TitleName"));
 }
 
 void TitleState::Update()
 {
 	if (m_playBtn->Update() == 1)
+		return;
+	if (m_pQuitButton->Update() == 1)
 		return;
 }
 
@@ -261,6 +267,8 @@ void TitleState::Render()
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 	m_pBackground->Render();
 	m_playBtn->Render();
+	m_pQuitButton->Render();
+	m_pName->Render();
 	State::Render();
 }
 
@@ -322,12 +330,14 @@ void LoseState::Enter()
 
 	BestTime = "BestTime : " + bestM + " : " + bestS;
 	CurrTime = "CurrentTime : " + currM + " : " + currS;
+	
 	m_pMenu = new MenuButton({ 0,0,200,80 }, { 312.0f,100.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("menu"));
 	m_pQuitButton = new ExitButton({ 0,0,400,100 }, { 312.0f,250.0f,400.0f,100.0f },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("exit"));
 	m_pBackground = new Sprite({ 0,0, 1024, 768 }, { 0.0,0,1024,768 },
 		Engine::Instance().GetRenderer(), TEMA::GetTexture("background"));
+	
 	m_score = new Label("Font", 312.0, 400, CurrTime, { 255,255,255,255 });
 	m_bestScore = new Label("Font", 312.0, 450, BestTime, { 255,255,255,255 });
 
